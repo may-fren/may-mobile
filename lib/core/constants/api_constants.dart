@@ -1,0 +1,19 @@
+class ApiConstants {
+  ApiConstants._();
+
+  static String get baseUrl {
+    return 'http://localhost:8090/api/v1';
+  }
+
+  // Auth
+  static const String login = '/auth/login';
+  static const String logout = '/auth/logout';
+  static const String refresh = '/auth/refresh';
+
+  // Resources
+  static const String users = '/users';
+  static const String roles = '/roles';
+  static const String permissions = '/permissions';
+  static const String userRoles = '/user-roles';
+  static const String rolePermissions = '/role-permissions';
+}
