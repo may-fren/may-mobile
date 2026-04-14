@@ -18,6 +18,6 @@ FROM nginx:alpine AS runtime
 COPY --from=builder /app/build/web /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 8092
+EXPOSE 7003
 
 CMD ["nginx", "-g", "daemon off;"]

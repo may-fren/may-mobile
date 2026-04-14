@@ -2,7 +2,7 @@ class ApiConstants {
   ApiConstants._();
 
   static String get baseUrl {
-    return 'http://localhost:8090/api/v1';
+    return 'https://may-backend.onbtech.com/api/v1';
   }
 
   // Auth

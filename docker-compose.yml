@@ -4,4 +4,4 @@ services:
     image: ozanemrahyakupoglu/may-mobile:${VERSION:-1.0.0}
     container_name: may-mobile
     ports:
-      - "8092:8092"
+      - "7003:7003"
