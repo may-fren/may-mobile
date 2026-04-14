@@ -4,7 +4,6 @@ build/
 .idea/
 *.iml
 .DS_Store
-pubspec.lock
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/flutter_export_environment.sh
