@@ -111,17 +111,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             height: compact ? 60 : 100,
             fit: BoxFit.contain,
           ),
-          if (!compact) ...[
-            const SizedBox(height: 12),
-            const Text(
-              'Fren Sistemleri Yönetimi',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
         ],
       ),
     );
