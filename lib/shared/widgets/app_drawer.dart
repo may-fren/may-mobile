@@ -26,6 +26,9 @@ const _allMenuItems = [
   _MenuItem(path: '/users', icon: Icons.person_outline, label: 'Kullanıcılar', group: 'YÖNETİM', requiredPermission: PermissionKeys.userRead),
   _MenuItem(path: '/roles', icon: Icons.star_outline, label: 'Roller', group: 'YÖNETİM', requiredPermission: PermissionKeys.rolesRead),
   _MenuItem(path: '/permissions', icon: Icons.security_outlined, label: 'Yetkiler', group: 'YÖNETİM', requiredPermission: PermissionKeys.permissionRead),
+  _MenuItem(path: '/modules', icon: Icons.widgets_outlined, label: 'Modüller', group: 'OPERASYON', requiredPermission: PermissionKeys.moduleRead),
+  _MenuItem(path: '/analyses', icon: Icons.analytics_outlined, label: 'Analizler', group: 'OPERASYON', requiredPermission: PermissionKeys.analysisRead),
+  _MenuItem(path: '/tests', icon: Icons.science_outlined, label: 'Testler', group: 'OPERASYON', requiredPermission: PermissionKeys.testRead),
   _MenuItem(path: '/settings', icon: Icons.settings_outlined, label: 'Ayarlar', group: 'GENEL'),
 ];
 

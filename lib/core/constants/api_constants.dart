@@ -16,4 +16,7 @@ class ApiConstants {
   static const String permissions = '/permissions';
   static const String userRoles = '/user-roles';
   static const String rolePermissions = '/role-permissions';
+  static const String modules = '/modules';
+  static const String analyses = '/analyses';
+  static const String tests = '/tests';
 }

@@ -8,6 +8,9 @@ import 'package:may_mobile/features/dashboard/presentation/dashboard_page.dart';
 import 'package:may_mobile/features/users/presentation/users_page.dart';
 import 'package:may_mobile/features/roles/presentation/roles_page.dart';
 import 'package:may_mobile/features/permissions/presentation/permissions_page.dart';
+import 'package:may_mobile/features/modules/presentation/modules_page.dart';
+import 'package:may_mobile/features/analyses/presentation/analyses_page.dart';
+import 'package:may_mobile/features/tests/presentation/tests_page.dart';
 import 'package:may_mobile/features/settings/presentation/settings_page.dart';
 import 'package:may_mobile/shared/widgets/app_drawer.dart';
 
@@ -40,6 +43,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/users', builder: (_, __) => const UsersPage()),
           GoRoute(path: '/roles', builder: (_, __) => const RolesPage()),
           GoRoute(path: '/permissions', builder: (_, __) => const PermissionsPage()),
+          GoRoute(path: '/modules', builder: (_, __) => const ModulesPage()),
+          GoRoute(path: '/analyses', builder: (_, __) => const AnalysesPage()),
+          GoRoute(path: '/tests', builder: (_, __) => const TestsPage()),
           GoRoute(path: '/settings', builder: (_, __) => const SettingsPage()),
         ],
       ),
