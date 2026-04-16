@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/core/network/api_exceptions.dart';
+import 'package:may_mobile/core/network/session_limit_exception.dart';
 import 'package:may_mobile/features/auth/presentation/auth_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -25,19 +26,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleLogin({bool forceLogin = false}) async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
       await ref
           .read(authProvider.notifier)
-          .login(_username.text.trim(), _password.text);
+          .login(_username.text.trim(), _password.text, forceLogin: forceLogin);
+    } on SessionLimitException catch (e) {
+      if (mounted) {
+        _showSessionLimitDialog(e);
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text(e is ApiException ? e.message : 'Giriş başarısız'),
+                Text(e is ApiException ? e.message : 'Giris basarisiz'),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -50,6 +55,51 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  void _showSessionLimitDialog(SessionLimitException e) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Aktif Oturum Limiti'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Bu platformda zaten aktif bir oturumunuz var. Devam ederseniz mevcut oturum sonlandirilacaktir.',
+            ),
+            const SizedBox(height: 16),
+            ...e.activeSessions.map((session) => Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: ListTile(
+                dense: true,
+                leading: Icon(
+                  session.platform == 'WEB' ? Icons.computer : Icons.phone_android,
+                  color: session.platform == 'WEB' ? Colors.blue : Colors.green,
+                ),
+                title: Text(session.platform, style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text('IP: ${session.ipAddress}'),
+              ),
+            )),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Vazgec'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _handleLogin(forceLogin: true);
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            child: const Text('Oturumu Kapat ve Giris Yap'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
