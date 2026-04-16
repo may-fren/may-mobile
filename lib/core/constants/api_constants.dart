@@ -19,4 +19,8 @@ class ApiConstants {
   static const String modules = '/modules';
   static const String analyses = '/analyses';
   static const String tests = '/tests';
+
+  // Sessions
+  static const String sessions = '/sessions';
+  static const String mySessions = '/sessions/me';
 }

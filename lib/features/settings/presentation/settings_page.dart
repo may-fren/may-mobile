@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:may_mobile/core/constants/api_constants.dart';
 import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/features/auth/presentation/auth_provider.dart';
+import 'package:may_mobile/features/sessions/presentation/sessions_page.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -67,6 +68,22 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Sessions
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.devices, color: AppColors.primary),
+              title: const Text('Aktif Oturumlar'),
+              subtitle: const Text('Oturumlarinizi goruntuleyin ve yonetin'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SessionsPage()),
               ),
             ),
           ),

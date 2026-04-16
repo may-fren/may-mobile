@@ -51,15 +51,26 @@ class DioClient {
             ));
             if (!kIsWeb) refreshDio.interceptors.add(CookieManager(cookieJar));
 
-            final response = await refreshDio.post(ApiConstants.refresh);
+            final refreshToken = await storage.getRefreshToken();
+            final response = await refreshDio.post(
+              ApiConstants.refresh,
+              data: refreshToken != null ? {'refreshToken': refreshToken} : null,
+              options: Options(headers: {'X-Platform': 'MOBILE'}),
+            );
+
             final newToken = response.data['accessToken'] as String;
             await storage.setToken(newToken);
+
+            final newRefreshToken = response.data['refreshToken'] as String?;
+            if (newRefreshToken != null) {
+              await storage.setRefreshToken(newRefreshToken);
+            }
 
             error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
             final retryResponse = await dio.fetch(error.requestOptions);
             return handler.resolve(retryResponse);
           } catch (_) {
-            await storage.clearToken();
+            await storage.clearAll();
             return handler.reject(error);
           }
         }
@@ -71,10 +82,10 @@ class DioClient {
   }
 
   static ApiException handleError(DioException e) {
-    final message =
-        e.response?.data is Map ? e.response?.data['message'] : null;
+    final data = e.response?.data;
+    final message = data is Map ? (data['detail'] ?? data['message']) : null;
     return ApiException(
-      message: message ?? 'Bir hata oluştu',
+      message: message ?? 'Bir hata olustu',
       statusCode: e.response?.statusCode,
     );
   }
