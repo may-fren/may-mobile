@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/core/network/api_exceptions.dart';
 import 'package:may_mobile/features/permissions/domain/permission_model.dart';
+import 'package:may_mobile/shared/widgets/modern_sheet.dart';
 
 class PermissionFormDialog extends StatefulWidget {
   final Permission? permission;
@@ -67,7 +68,7 @@ class _PermissionFormDialogState extends State<PermissionFormDialog> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isEditing ? 'Yetki guncellendi' : 'Yetki olusturuldu'),
+            content: Text(isEditing ? 'Yetki güncellendi' : 'Yetki oluşturuldu'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -88,83 +89,55 @@ class _PermissionFormDialogState extends State<PermissionFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      isEditing ? 'Yetki Duzenle' : 'Yeni Yetki',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _name,
-                  decoration: const InputDecoration(labelText: 'Yetki Adi'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _description,
-                  decoration: const InputDecoration(labelText: 'Aciklama'),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _module,
-                  decoration: const InputDecoration(labelText: 'Modul'),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _action,
-                  decoration: const InputDecoration(labelText: 'Aksiyon'),
-                ),
-                if (isEditing) ...[
-                  const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    value: _status,
-                    decoration: const InputDecoration(labelText: 'Durum'),
-                    items: const [
-                      DropdownMenuItem(value: 'ACTIVE', child: Text('ACTIVE')),
-                      DropdownMenuItem(value: 'INACTIVE', child: Text('INACTIVE')),
-                    ],
-                    onChanged: (v) => setState(() => _status = v!),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: _saving ? null : _handleSave,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  child: _saving
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : Text(isEditing ? 'Guncelle' : 'Olustur'),
-                ),
-              ],
-            ),
-          ),
+    return ModernFormSheet(
+      title: isEditing ? 'Yetki Düzenle' : 'Yeni Yetki',
+      icon: isEditing ? Icons.edit_outlined : Icons.security_outlined,
+      formKey: _formKey,
+      saving: _saving,
+      onSave: _handleSave,
+      buttonLabel: isEditing ? 'Güncelle' : 'Oluştur',
+      fields: [
+        TextFormField(
+          controller: _name,
+          decoration: modernInputDecoration(label: 'Yetki Adı', prefixIcon: Icons.key_outlined),
+          validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
         ),
-      ),
+        const SizedBox(height: 14),
+        TextFormField(
+          controller: _description,
+          decoration: modernInputDecoration(label: 'Açıklama', prefixIcon: Icons.description_outlined),
+        ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _module,
+                decoration: modernInputDecoration(label: 'Modül'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _action,
+                decoration: modernInputDecoration(label: 'Aksiyon'),
+              ),
+            ),
+          ],
+        ),
+        if (isEditing) ...[
+          const SizedBox(height: 14),
+          DropdownButtonFormField<String>(
+            value: _status,
+            decoration: modernInputDecoration(label: 'Durum', prefixIcon: Icons.toggle_on_outlined),
+            items: const [
+              DropdownMenuItem(value: 'ACTIVE', child: Text('Aktif')),
+              DropdownMenuItem(value: 'INACTIVE', child: Text('Pasif')),
+            ],
+            onChanged: (v) => setState(() => _status = v!),
+          ),
+        ],
+      ],
     );
   }
 }

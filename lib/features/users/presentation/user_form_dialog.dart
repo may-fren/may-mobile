@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/core/network/api_exceptions.dart';
 import 'package:may_mobile/features/users/domain/user_model.dart';
+import 'package:may_mobile/shared/widgets/modern_sheet.dart';
 
 class UserFormDialog extends StatefulWidget {
   final User? user;
@@ -96,113 +97,85 @@ class _UserFormDialogState extends State<UserFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      isEditing ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (!isEditing) ...[
-                  TextFormField(
-                    controller: _username,
-                    decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
-                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                  ),
-                  const SizedBox(height: 12),
-                ],
-                TextFormField(
-                  controller: _email,
-                  decoration: const InputDecoration(labelText: 'E-posta'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Zorunlu alan';
-                    if (!v.contains('@')) return 'Geçerli e-posta girin';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                if (!isEditing) ...[
-                  TextFormField(
-                    controller: _password,
-                    decoration: const InputDecoration(labelText: 'Şifre'),
-                    obscureText: true,
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Zorunlu alan';
-                      if (v.length < 8) return 'En az 8 karakter';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                ],
-                TextFormField(
-                  controller: _firstName,
-                  decoration: const InputDecoration(labelText: 'Ad'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _lastName,
-                  decoration: const InputDecoration(labelText: 'Soyad'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _phone,
-                  decoration: const InputDecoration(labelText: 'Telefon'),
-                  keyboardType: TextInputType.phone,
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                if (isEditing) ...[
-                  const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    value: _status,
-                    decoration: const InputDecoration(labelText: 'Durum'),
-                    items: const [
-                      DropdownMenuItem(value: 'ACTIVE', child: Text('ACTIVE')),
-                      DropdownMenuItem(value: 'INACTIVE', child: Text('INACTIVE')),
-                    ],
-                    onChanged: (v) => setState(() => _status = v!),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: _saving ? null : _handleSave,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  child: _saving
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : Text(isEditing ? 'Güncelle' : 'Oluştur'),
-                ),
-              ],
-            ),
+    return ModernFormSheet(
+      title: isEditing ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı',
+      icon: isEditing ? Icons.edit_outlined : Icons.person_add_outlined,
+      formKey: _formKey,
+      saving: _saving,
+      onSave: _handleSave,
+      buttonLabel: isEditing ? 'Güncelle' : 'Oluştur',
+      fields: [
+        if (!isEditing) ...[
+          TextFormField(
+            controller: _username,
+            decoration: modernInputDecoration(label: 'Kullanıcı Adı', prefixIcon: Icons.person_outline),
+            validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
           ),
+          const SizedBox(height: 14),
+        ],
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _firstName,
+                decoration: modernInputDecoration(label: 'Ad'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _lastName,
+                decoration: modernInputDecoration(label: 'Soyad'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+              ),
+            ),
+          ],
         ),
-      ),
+        const SizedBox(height: 14),
+        TextFormField(
+          controller: _email,
+          decoration: modernInputDecoration(label: 'E-posta', prefixIcon: Icons.email_outlined),
+          keyboardType: TextInputType.emailAddress,
+          validator: (v) {
+            if (v == null || v.trim().isEmpty) return 'Zorunlu alan';
+            if (!v.contains('@')) return 'Geçerli e-posta girin';
+            return null;
+          },
+        ),
+        const SizedBox(height: 14),
+        TextFormField(
+          controller: _phone,
+          decoration: modernInputDecoration(label: 'Telefon', prefixIcon: Icons.phone_outlined),
+          keyboardType: TextInputType.phone,
+          validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+        ),
+        if (!isEditing) ...[
+          const SizedBox(height: 14),
+          TextFormField(
+            controller: _password,
+            decoration: modernInputDecoration(label: 'Şifre', prefixIcon: Icons.lock_outline),
+            obscureText: true,
+            validator: (v) {
+              if (v == null || v.isEmpty) return 'Zorunlu alan';
+              if (v.length < 8) return 'En az 8 karakter';
+              return null;
+            },
+          ),
+        ],
+        if (isEditing) ...[
+          const SizedBox(height: 14),
+          DropdownButtonFormField<String>(
+            value: _status,
+            decoration: modernInputDecoration(label: 'Durum', prefixIcon: Icons.toggle_on_outlined),
+            items: const [
+              DropdownMenuItem(value: 'ACTIVE', child: Text('Aktif')),
+              DropdownMenuItem(value: 'INACTIVE', child: Text('Pasif')),
+            ],
+            onChanged: (v) => setState(() => _status = v!),
+          ),
+        ],
+      ],
     );
   }
 }

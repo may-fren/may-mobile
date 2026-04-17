@@ -6,6 +6,7 @@ import 'package:may_mobile/features/roles/presentation/roles_provider.dart';
 import 'package:may_mobile/features/users/domain/user_model.dart';
 import 'package:may_mobile/features/users/domain/user_role_model.dart';
 import 'package:may_mobile/features/users/presentation/users_provider.dart';
+import 'package:may_mobile/shared/widgets/modern_sheet.dart';
 
 class UserRolesSheet extends ConsumerStatefulWidget {
   final User user;
@@ -54,14 +55,14 @@ class _UserRolesSheetState extends ConsumerState<UserRolesSheet> {
       await _loadRoles();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Rol atandi'), backgroundColor: AppColors.success),
+          const SnackBar(content: Text('Rol atandı'), backgroundColor: AppColors.success),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e is ApiException ? e.message : 'Rol atanamadi'),
+            content: Text(e is ApiException ? e.message : 'Rol atanamadı'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -77,14 +78,14 @@ class _UserRolesSheetState extends ConsumerState<UserRolesSheet> {
       await _loadRoles();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Rol kaldirildi'), backgroundColor: AppColors.success),
+          const SnackBar(content: Text('Rol kaldırıldı'), backgroundColor: AppColors.success),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e is ApiException ? e.message : 'Rol kaldirilamadi'),
+            content: Text(e is ApiException ? e.message : 'Rol kaldırılamadı'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -97,35 +98,15 @@ class _UserRolesSheetState extends ConsumerState<UserRolesSheet> {
     final allRolesState = ref.watch(allRolesProvider);
     final assignedRoleIds = _userRoles.map((ur) => ur.roleId).toSet();
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.7,
-        ),
+    return ModernSheet(
+      title: '${widget.user.username} — Roller',
+      icon: Icons.star_outline,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    '${widget.user.username} — Rol Yonetimi',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
             // Assign role
             allRolesState.when(
               data: (roles) {
@@ -136,10 +117,7 @@ class _UserRolesSheetState extends ConsumerState<UserRolesSheet> {
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         value: _selectedRoleId,
-                        decoration: const InputDecoration(
-                          labelText: 'Rol secin...',
-                          isDense: true,
-                        ),
+                        decoration: modernInputDecoration(label: 'Rol seçin...'),
                         items: available
                             .map((r) =>
                                 DropdownMenuItem(value: r.id, child: Text(r.name)))
@@ -161,40 +139,76 @@ class _UserRolesSheetState extends ConsumerState<UserRolesSheet> {
                             )
                           : const Icon(Icons.add, size: 18),
                       label: const Text('Ata'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        minimumSize: const Size(0, 52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ],
                 );
               },
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const Text('Roller yuklenemedi'),
+              error: (_, __) => const Text('Roller yüklenemedi'),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
             // Assigned roles list
             Flexible(
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _userRoles.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'Atanmis rol yok',
-                            style: TextStyle(color: AppColors.textSecondary),
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.star_border, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Atanmış rol yok',
+                                style: TextStyle(color: AppColors.textSecondary),
+                              ),
+                            ],
                           ),
                         )
-                      : ListView.builder(
+                      : ListView.separated(
                           shrinkWrap: true,
                           itemCount: _userRoles.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final ur = _userRoles[index];
-                            return ListTile(
-                              leading: const Icon(Icons.star, color: AppColors.warning),
-                              title: Text(ur.roleName),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline,
-                                    color: AppColors.error, size: 20),
-                                onPressed: () => _removeRole(ur.id),
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.warning.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(Icons.star, color: AppColors.warning, size: 18),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      ur.roleName,
+                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.remove_circle_outline, color: AppColors.error, size: 22),
+                                    onPressed: () => _removeRole(ur.id),
+                                  ),
+                                ],
                               ),
                             );
                           },

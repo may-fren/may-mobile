@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/core/network/api_exceptions.dart';
 import 'package:may_mobile/features/modules/domain/module_model.dart';
+import 'package:may_mobile/shared/widgets/modern_sheet.dart';
 
 class ModuleFormDialog extends StatefulWidget {
   final Module? module;
@@ -73,7 +74,7 @@ class _ModuleFormDialogState extends State<ModuleFormDialog> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isEditing ? 'Modul guncellendi' : 'Modul olusturuldu'),
+            content: Text(isEditing ? 'Modül güncellendi' : 'Modül oluşturuldu'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -94,92 +95,72 @@ class _ModuleFormDialogState extends State<ModuleFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      isEditing ? 'Modul Duzenle' : 'Yeni Modul',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _name,
-                  decoration: const InputDecoration(labelText: 'Modul Adi'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _brand,
-                  decoration: const InputDecoration(labelText: 'Marka'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _model,
-                  decoration: const InputDecoration(labelText: 'Model'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _year,
-                  decoration: const InputDecoration(labelText: 'Yil'),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _code,
-                  decoration: const InputDecoration(labelText: 'Kod'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
-                ),
-                if (isEditing) ...[
-                  const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    value: _status,
-                    decoration: const InputDecoration(labelText: 'Durum'),
-                    items: const [
-                      DropdownMenuItem(value: 'ACTIVE', child: Text('ACTIVE')),
-                      DropdownMenuItem(value: 'INACTIVE', child: Text('INACTIVE')),
-                    ],
-                    onChanged: (v) => setState(() => _status = v!),
-                  ),
-                ],
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: _saving ? null : _handleSave,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  child: _saving
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : Text(isEditing ? 'Guncelle' : 'Olustur'),
-                ),
-              ],
-            ),
-          ),
+    return ModernFormSheet(
+      title: isEditing ? 'Modül Düzenle' : 'Yeni Modül',
+      icon: isEditing ? Icons.edit_outlined : Icons.precision_manufacturing_outlined,
+      formKey: _formKey,
+      saving: _saving,
+      onSave: _handleSave,
+      buttonLabel: isEditing ? 'Güncelle' : 'Oluştur',
+      fields: [
+        TextFormField(
+          controller: _name,
+          decoration: modernInputDecoration(label: 'Modül Adı', prefixIcon: Icons.label_outline),
+          validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
         ),
-      ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _brand,
+                decoration: modernInputDecoration(label: 'Marka'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _model,
+                decoration: modernInputDecoration(label: 'Model'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _year,
+                decoration: modernInputDecoration(label: 'Yıl', prefixIcon: Icons.calendar_today_outlined),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _code,
+                decoration: modernInputDecoration(label: 'Kod', prefixIcon: Icons.qr_code_outlined),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
+              ),
+            ),
+          ],
+        ),
+        if (isEditing) ...[
+          const SizedBox(height: 14),
+          DropdownButtonFormField<String>(
+            value: _status,
+            decoration: modernInputDecoration(label: 'Durum', prefixIcon: Icons.toggle_on_outlined),
+            items: const [
+              DropdownMenuItem(value: 'ACTIVE', child: Text('Aktif')),
+              DropdownMenuItem(value: 'INACTIVE', child: Text('Pasif')),
+            ],
+            onChanged: (v) => setState(() => _status = v!),
+          ),
+        ],
+      ],
     );
   }
 }

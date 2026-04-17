@@ -6,6 +6,7 @@ import 'package:may_mobile/features/permissions/presentation/permissions_provide
 import 'package:may_mobile/features/roles/domain/role_model.dart';
 import 'package:may_mobile/features/roles/domain/role_permission_model.dart';
 import 'package:may_mobile/features/roles/presentation/roles_provider.dart';
+import 'package:may_mobile/shared/widgets/modern_sheet.dart';
 
 class RolePermissionsSheet extends ConsumerStatefulWidget {
   final Role role;
@@ -55,13 +56,13 @@ class _RolePermissionsSheetState extends ConsumerState<RolePermissionsSheet> {
       await _loadPermissions();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Yetki atandi'), backgroundColor: AppColors.success),
+          const SnackBar(content: Text('Yetki atandı'), backgroundColor: AppColors.success),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e is ApiException ? e.message : 'Yetki atanamadi'),
+          content: Text(e is ApiException ? e.message : 'Yetki atanamadı'),
           backgroundColor: AppColors.error,
         ));
       }
@@ -76,13 +77,13 @@ class _RolePermissionsSheetState extends ConsumerState<RolePermissionsSheet> {
       await _loadPermissions();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Yetki kaldirildi'), backgroundColor: AppColors.success),
+          const SnackBar(content: Text('Yetki kaldırıldı'), backgroundColor: AppColors.success),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e is ApiException ? e.message : 'Yetki kaldirilamadi'),
+          content: Text(e is ApiException ? e.message : 'Yetki kaldırılamadı'),
           backgroundColor: AppColors.error,
         ));
       }
@@ -94,32 +95,15 @@ class _RolePermissionsSheetState extends ConsumerState<RolePermissionsSheet> {
     final allPermsState = ref.watch(allPermissionsProvider);
     final assignedPermIds = _rolePermissions.map((rp) => rp.permissionId).toSet();
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
+    return ModernSheet(
+      title: '${widget.role.name} — Yetkiler',
+      icon: Icons.security_outlined,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    '${widget.role.name} — Yetki Yonetimi',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
             allPermsState.when(
               data: (perms) {
                 final available = perms.where((p) => !assignedPermIds.contains(p.id)).toList();
@@ -128,7 +112,7 @@ class _RolePermissionsSheetState extends ConsumerState<RolePermissionsSheet> {
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         value: _selectedPermissionId,
-                        decoration: const InputDecoration(labelText: 'Yetki secin...', isDense: true),
+                        decoration: modernInputDecoration(label: 'Yetki seçin...'),
                         items: available
                             .map((p) => DropdownMenuItem(value: p.id, child: Text(p.name)))
                             .toList(),
@@ -145,30 +129,69 @@ class _RolePermissionsSheetState extends ConsumerState<RolePermissionsSheet> {
                               child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                           : const Icon(Icons.add, size: 18),
                       label: const Text('Ata'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        minimumSize: const Size(0, 52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ],
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const Text('Yetkiler yuklenemedi'),
+              error: (_, __) => const Text('Yetkiler yüklenemedi'),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Flexible(
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _rolePermissions.isEmpty
-                      ? const Center(child: Text('Atanmis yetki yok', style: TextStyle(color: AppColors.textSecondary)))
-                      : ListView.builder(
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.shield_outlined, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+                              const SizedBox(height: 8),
+                              const Text('Atanmış yetki yok', style: TextStyle(color: AppColors.textSecondary)),
+                            ],
+                          ),
+                        )
+                      : ListView.separated(
                           shrinkWrap: true,
                           itemCount: _rolePermissions.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final rp = _rolePermissions[index];
-                            return ListTile(
-                              leading: const Icon(Icons.security, color: AppColors.info),
-                              title: Text(rp.permissionName),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20),
-                                onPressed: () => _removePermission(rp.id),
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.info.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(Icons.security, color: AppColors.info, size: 18),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      rp.permissionName,
+                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.remove_circle_outline, color: AppColors.error, size: 22),
+                                    onPressed: () => _removePermission(rp.id),
+                                  ),
+                                ],
                               ),
                             );
                           },
