@@ -4,6 +4,7 @@ import 'package:may_mobile/core/constants/app_colors.dart';
 import 'package:may_mobile/core/network/api_exceptions.dart';
 import 'package:may_mobile/core/network/session_limit_exception.dart';
 import 'package:may_mobile/features/auth/presentation/auth_provider.dart';
+import 'package:may_mobile/shared/widgets/truck_background.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -108,7 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
+      body: TruckBackground(child: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: LayoutBuilder(
@@ -147,7 +148,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             },
           ),
         ),
-      ),
+      )),
     );
   }
 

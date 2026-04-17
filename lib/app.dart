@@ -13,6 +13,7 @@ import 'package:may_mobile/features/analyses/presentation/analyses_page.dart';
 import 'package:may_mobile/features/tests/presentation/tests_page.dart';
 import 'package:may_mobile/features/settings/presentation/settings_page.dart';
 import 'package:may_mobile/shared/widgets/app_drawer.dart';
+import 'package:may_mobile/shared/widgets/truck_background.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -69,7 +70,7 @@ class _MainShell extends StatelessWidget {
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       drawer: const AppDrawer(),
-      body: child,
+      body: TruckBackground(child: child),
       backgroundColor: AppColors.background,
     );
   }
