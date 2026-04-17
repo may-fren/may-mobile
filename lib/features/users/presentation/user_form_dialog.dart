@@ -75,7 +75,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isEditing ? 'Kullanici guncellendi' : 'Kullanici olusturuldu'),
+            content: Text(isEditing ? 'Kullanıcı güncellendi' : 'Kullanıcı oluşturuldu'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -84,7 +84,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e is ApiException ? e.message : 'Islem basarisiz'),
+            content: Text(e is ApiException ? e.message : 'İşlem başarısız'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -111,7 +111,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      isEditing ? 'Kullanici Duzenle' : 'Yeni Kullanici',
+                      isEditing ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı',
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     IconButton(
@@ -124,7 +124,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                 if (!isEditing) ...[
                   TextFormField(
                     controller: _username,
-                    decoration: const InputDecoration(labelText: 'Kullanici Adi'),
+                    decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Zorunlu alan' : null,
                   ),
                   const SizedBox(height: 12),
@@ -135,7 +135,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Zorunlu alan';
-                    if (!v.contains('@')) return 'Gecerli e-posta girin';
+                    if (!v.contains('@')) return 'Geçerli e-posta girin';
                     return null;
                   },
                 ),
@@ -143,7 +143,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                 if (!isEditing) ...[
                   TextFormField(
                     controller: _password,
-                    decoration: const InputDecoration(labelText: 'Sifre'),
+                    decoration: const InputDecoration(labelText: 'Şifre'),
                     obscureText: true,
                     validator: (v) {
                       if (v == null || v.isEmpty) return 'Zorunlu alan';
@@ -196,7 +196,7 @@ class _UserFormDialogState extends State<UserFormDialog> {
                           height: 20,
                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
-                      : Text(isEditing ? 'Guncelle' : 'Olustur'),
+                      : Text(isEditing ? 'Güncelle' : 'Oluştur'),
                 ),
               ],
             ),

@@ -79,7 +79,7 @@ class SettingsPage extends ConsumerWidget {
             child: ListTile(
               leading: const Icon(Icons.devices, color: AppColors.primary),
               title: const Text('Aktif Oturumlar'),
-              subtitle: const Text('Oturumlarinizi goruntuleyin ve yonetin'),
+              subtitle: const Text('Oturumlarınızı görüntüleyin ve yönetin'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.push(
                 context,
@@ -120,7 +120,7 @@ class SettingsPage extends ConsumerWidget {
                 await ref.read(authProvider.notifier).logout();
               },
               icon: const Icon(Icons.logout, color: AppColors.error),
-              label: const Text('Cikis Yap', style: TextStyle(color: AppColors.error)),
+              label: const Text('Çıkış Yap', style: TextStyle(color: AppColors.error)),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.error),
                 minimumSize: const Size(double.infinity, 48),

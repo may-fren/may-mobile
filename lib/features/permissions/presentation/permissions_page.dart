@@ -126,7 +126,7 @@ class _PermissionsPageState extends ConsumerState<PermissionsPage> {
           child: state.when(
             data: (pageResponse) {
               if (pageResponse.content.isEmpty) {
-                return const EmptyStateWidget(icon: Icons.security_outlined, message: 'Yetki bulunamadi');
+                return const EmptyStateWidget(icon: Icons.security_outlined, message: 'Yetki bulunamadı');
               }
               return RefreshIndicator(
                 onRefresh: () => ref.read(permissionsProvider.notifier).fetchPermissions(),
@@ -206,7 +206,7 @@ class _PermissionsPageState extends ConsumerState<PermissionsPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: () => ref.read(permissionsProvider.notifier).fetchPermissions(),

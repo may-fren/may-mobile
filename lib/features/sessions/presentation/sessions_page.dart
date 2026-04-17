@@ -30,7 +30,7 @@ class SessionsPage extends ConsumerWidget {
           ),
         ),
         data: (sessions) => sessions.isEmpty
-            ? const Center(child: Text('Aktif oturum bulunamadi'))
+            ? const Center(child: Text('Aktif oturum bulunamadı'))
             : RefreshIndicator(
                 onRefresh: () => ref.read(sessionsProvider.notifier).load(),
                 child: ListView.builder(
@@ -113,12 +113,12 @@ class _SessionCard extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Oturumu Sonlandir'),
-        content: const Text('Bu oturumu sonlandirmak istediginize emin misiniz?'),
+        title: const Text('Oturumu Sonlandır'),
+        content: const Text('Bu oturumu sonlandırmak istediğinize emin misiniz?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Vazgec'),
+            child: const Text('Vazgeç'),
           ),
           TextButton(
             onPressed: () {
@@ -126,7 +126,7 @@ class _SessionCard extends ConsumerWidget {
               ref.read(sessionsProvider.notifier).terminateSession(session.id);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Sonlandir'),
+            child: const Text('Sonlandır'),
           ),
         ],
       ),

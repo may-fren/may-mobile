@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:may_mobile/core/constants/api_constants.dart';
+import 'package:may_mobile/core/network/api_exceptions.dart';
 import 'package:may_mobile/core/network/dio_client.dart';
 import 'package:may_mobile/core/network/session_limit_exception.dart';
 import 'package:may_mobile/core/storage/secure_storage_service.dart';
@@ -23,8 +26,47 @@ class AuthRepository {
           'password': password,
           if (forceLogin) 'forceLogin': true,
         },
-        options: Options(headers: {'X-Platform': 'MOBILE'}),
+        options: Options(
+          headers: {'X-Platform': 'MOBILE'},
+          // 409'u exception olarak değil response olarak al (Flutter web uyumu)
+          validateStatus: (status) => status != null && status < 500,
+        ),
       );
+
+      if (response.statusCode == 409) {
+        var data = response.data;
+        if (data is String) {
+          try {
+            data = jsonDecode(data);
+          } catch (_) {}
+        }
+        if (data is Map) {
+          final code = data['code'];
+          if (code is num && code.toInt() == 1007) {
+            final sessions = (data['activeSessions'] as List?)
+                    ?.map((s) => ActiveSessionInfo.fromJson(
+                        Map<String, dynamic>.from(s as Map)))
+                    .toList() ??
+                [];
+            throw SessionLimitException(
+              message: data['detail'] ?? 'Oturum limiti aşıldı',
+              statusCode: 409,
+              activeSessions: sessions,
+            );
+          }
+        }
+        throw ApiException(message: 'Beklenmeyen hata', statusCode: 409);
+      }
+
+      if (response.statusCode != 200) {
+        final data = response.data;
+        final message = data is Map ? (data['detail'] ?? data['message']) : null;
+        throw ApiException(
+          message: message ?? 'Giriş başarısız',
+          statusCode: response.statusCode,
+        );
+      }
+
       final accessToken = response.data['accessToken'] as String;
       await _storage.setToken(accessToken);
 
@@ -34,21 +76,11 @@ class AuthRepository {
       }
 
       return JwtUtils.parseUser(accessToken);
+    } on SessionLimitException {
+      rethrow;
+    } on ApiException {
+      rethrow;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 409) {
-        final data = e.response?.data;
-        if (data is Map && data['code'] == 1007) {
-          final sessions = (data['activeSessions'] as List?)
-                  ?.map((s) => ActiveSessionInfo.fromJson(s as Map<String, dynamic>))
-                  .toList() ??
-              [];
-          throw SessionLimitException(
-            message: data['detail'] ?? 'Oturum limiti asildi',
-            statusCode: 409,
-            activeSessions: sessions,
-          );
-        }
-      }
       throw DioClient.handleError(e);
     }
   }

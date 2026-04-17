@@ -33,15 +33,12 @@ class AuthNotifier extends StateNotifier<AsyncValue<AuthUser?>> {
   }
 
   Future<void> login(String username, String password, {bool forceLogin = false}) async {
-    state = const AsyncValue.loading();
     try {
       final user = await _repository.login(username, password, forceLogin: forceLogin);
       state = AsyncValue.data(user);
     } on SessionLimitException {
-      state = const AsyncValue.data(null);
       rethrow;
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
       rethrow;
     }
   }

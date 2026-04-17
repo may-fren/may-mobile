@@ -85,7 +85,7 @@ class DioClient {
     final data = e.response?.data;
     final message = data is Map ? (data['detail'] ?? data['message']) : null;
     return ApiException(
-      message: message ?? 'Bir hata olustu',
+      message: message ?? 'Bir hata oluştu',
       statusCode: e.response?.statusCode,
     );
   }

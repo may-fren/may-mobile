@@ -15,7 +15,7 @@ class ActiveSessionInfo {
 
   factory ActiveSessionInfo.fromJson(Map<String, dynamic> json) {
     return ActiveSessionInfo(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       platform: json['platform'] as String,
       deviceInfo: json['deviceInfo'] as String?,
       ipAddress: json['ipAddress'] as String,

@@ -127,7 +127,7 @@ class _RolesPageState extends ConsumerState<RolesPage> {
           child: rolesState.when(
             data: (pageResponse) {
               if (pageResponse.content.isEmpty) {
-                return const EmptyStateWidget(icon: Icons.star_outline, message: 'Rol bulunamadi');
+                return const EmptyStateWidget(icon: Icons.star_outline, message: 'Rol bulunamadı');
               }
               return RefreshIndicator(
                 onRefresh: () => ref.read(rolesProvider.notifier).fetchRoles(),
@@ -184,7 +184,7 @@ class _RolesPageState extends ConsumerState<RolesPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: () => ref.read(rolesProvider.notifier).fetchRoles(),

@@ -39,22 +39,22 @@ class DashboardPage extends ConsumerWidget {
   Widget _buildStatsGrid() {
     const cards = [
       _StatCard(
-        title: 'Kullanicilar',
-        description: 'Sistem kullanici sayisi',
+        title: 'Kullanıcılar',
+        description: 'Sistem kullanıcı sayısı',
         icon: Icons.person_outline,
         accentColor: Color(0xFF6A8AC4),
         iconBackground: Color(0xFFE8F0FD),
       ),
       _StatCard(
         title: 'Roller',
-        description: 'Tanimli rol sayisi',
+        description: 'Tanımlı rol sayısı',
         icon: Icons.star_outline,
         accentColor: Color(0xFF9C6AC4),
         iconBackground: Color(0xFFF5EAFE),
       ),
       _StatCard(
         title: 'Yetkiler',
-        description: 'Tanimli yetki sayisi',
+        description: 'Tanımlı yetki sayısı',
         icon: Icons.security_outlined,
         accentColor: Color(0xFFC4789A),
         iconBackground: Color(0xFFFDE8F0),

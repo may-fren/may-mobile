@@ -115,7 +115,7 @@ class _AnalysesPageState extends ConsumerState<AnalysesPage> {
           child: state.when(
             data: (pageResponse) {
               if (pageResponse.content.isEmpty) {
-                return const EmptyStateWidget(icon: Icons.analytics_outlined, message: 'Analiz bulunamadi');
+                return const EmptyStateWidget(icon: Icons.analytics_outlined, message: 'Analiz bulunamadı');
               }
               return RefreshIndicator(
                 onRefresh: () => ref.read(analysesProvider.notifier).fetchAnalyses(),
@@ -185,7 +185,7 @@ class _AnalysesPageState extends ConsumerState<AnalysesPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(onPressed: () => ref.read(analysesProvider.notifier).fetchAnalyses(), child: const Text('Tekrar Dene')),
                 ],

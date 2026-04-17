@@ -42,7 +42,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text(e is ApiException ? e.message : 'Giris basarisiz'),
+                Text(e is ApiException ? e.message : 'Giriş başarısız'),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -67,7 +67,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Bu platformda zaten aktif bir oturumunuz var. Devam ederseniz mevcut oturum sonlandirilacaktir.',
+              'Bu platformda zaten aktif bir oturumunuz var. Devam ederseniz mevcut oturum sonlandırılacaktır.',
             ),
             const SizedBox(height: 16),
             ...e.activeSessions.map((session) => Card(
@@ -87,7 +87,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Vazgec'),
+            child: const Text('Vazgeç'),
           ),
           FilledButton(
             onPressed: () {
@@ -95,7 +95,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               _handleLogin(forceLogin: true);
             },
             style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Oturumu Kapat ve Giris Yap'),
+            child: const Text('Oturumu Kapat ve Giriş Yap'),
           ),
         ],
       ),

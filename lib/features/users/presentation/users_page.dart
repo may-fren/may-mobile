@@ -72,7 +72,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Kullanicilar',
+                'Kullanıcılar',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                       child: TextField(
                         controller: _usernameFilter,
                         decoration: const InputDecoration(
-                          labelText: 'Kullanici Adi',
+                          labelText: 'Kullanıcı Adı',
                           isDense: true,
                         ),
                       ),
@@ -173,7 +173,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                           isDense: true,
                         ),
                         items: const [
-                          DropdownMenuItem(value: null, child: Text('Tumu')),
+                          DropdownMenuItem(value: null, child: Text('Tümü')),
                           DropdownMenuItem(value: 'ACTIVE', child: Text('ACTIVE')),
                           DropdownMenuItem(value: 'INACTIVE', child: Text('INACTIVE')),
                         ],
@@ -206,7 +206,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
               if (pageResponse.content.isEmpty) {
                 return const EmptyStateWidget(
                   icon: Icons.person_off_outlined,
-                  message: 'Kullanici bulunamadi',
+                  message: 'Kullanıcı bulunamadı',
                 );
               }
               return RefreshIndicator(
@@ -270,7 +270,7 @@ class _UsersPageState extends ConsumerState<UsersPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: () => ref.read(usersProvider.notifier).fetchUsers(),
@@ -317,22 +317,22 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   Future<void> _handleDelete(User user) async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Kullaniciyi Sil',
-      message: '${user.username} kullanicisini silmek istediginize emin misiniz?',
+      title: 'Kullanıcıyı Sil',
+      message: '${user.username} kullanıcısını silmek istediğinize emin misiniz?',
     );
     if (confirmed) {
       try {
         await ref.read(usersProvider.notifier).deleteUser(user.id);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Kullanici silindi'), backgroundColor: AppColors.success),
+            const SnackBar(content: Text('Kullanıcı silindi'), backgroundColor: AppColors.success),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(e is ApiException ? e.message : 'Kullanici silinemedi'),
+              content: Text(e is ApiException ? e.message : 'Kullanıcı silinemedi'),
               backgroundColor: AppColors.error,
             ),
           );
@@ -451,7 +451,7 @@ class _UserCard extends StatelessWidget {
                     TextButton.icon(
                       onPressed: onEdit,
                       icon: const Icon(Icons.edit_outlined, size: 16),
-                      label: const Text('Duzenle'),
+                      label: const Text('Düzenle'),
                       style: TextButton.styleFrom(foregroundColor: AppColors.info),
                     ),
                   ],

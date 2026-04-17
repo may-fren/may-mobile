@@ -115,7 +115,7 @@ class _TestsPageState extends ConsumerState<TestsPage> {
           child: state.when(
             data: (pageResponse) {
               if (pageResponse.content.isEmpty) {
-                return const EmptyStateWidget(icon: Icons.science_outlined, message: 'Test bulunamadi');
+                return const EmptyStateWidget(icon: Icons.science_outlined, message: 'Test bulunamadı');
               }
               return RefreshIndicator(
                 onRefresh: () => ref.read(testsProvider.notifier).fetchTests(),
@@ -185,7 +185,7 @@ class _TestsPageState extends ConsumerState<TestsPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(onPressed: () => ref.read(testsProvider.notifier).fetchTests(), child: const Text('Tekrar Dene')),
                 ],

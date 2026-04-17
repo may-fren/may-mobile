@@ -125,7 +125,7 @@ class _ModulesPageState extends ConsumerState<ModulesPage> {
           child: state.when(
             data: (pageResponse) {
               if (pageResponse.content.isEmpty) {
-                return const EmptyStateWidget(icon: Icons.widgets_outlined, message: 'Modul bulunamadi');
+                return const EmptyStateWidget(icon: Icons.widgets_outlined, message: 'Modül bulunamadı');
               }
               return RefreshIndicator(
                 onRefresh: () => ref.read(modulesProvider.notifier).fetchModules(),
@@ -205,7 +205,7 @@ class _ModulesPageState extends ConsumerState<ModulesPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Hata: ${e is ApiException ? e.message : 'Yuklenemedi'}'),
+                  Text('Hata: ${e is ApiException ? e.message : 'Yüklenemedi'}'),
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: () => ref.read(modulesProvider.notifier).fetchModules(),
@@ -246,7 +246,7 @@ class _ModulesPageState extends ConsumerState<ModulesPage> {
         await ref.read(modulesProvider.notifier).deleteModule(mod.id);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Modul silindi'), backgroundColor: AppColors.success),
+            const SnackBar(content: Text('Modül silindi'), backgroundColor: AppColors.success),
           );
         }
       } catch (e) {

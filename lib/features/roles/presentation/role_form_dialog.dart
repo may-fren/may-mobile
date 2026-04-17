@@ -66,7 +66,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e is ApiException ? e.message : 'Islem basarisiz'),
+            content: Text(e is ApiException ? e.message : 'İşlem başarısız'),
             backgroundColor: AppColors.error,
           ),
         );
