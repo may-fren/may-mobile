@@ -10,11 +10,12 @@ class UserRoleRepository {
 
   Future<List<UserRoleResponse>> getRolesByUserId(int userId) async {
     try {
-      final response =
-          await _dio.get('${ApiConstants.userRoles}/user/$userId');
-      return (response.data as List)
-          .map((e) => UserRoleResponse.fromJson(e))
-          .toList();
+      final response = await _dio.get(
+        '${ApiConstants.userRoles}/user/$userId',
+        queryParameters: {'page': 0, 'size': 1000},
+      );
+      final content = response.data['content'] as List;
+      return content.map((e) => UserRoleResponse.fromJson(e)).toList();
     } on DioException catch (e) {
       throw DioClient.handleError(e);
     }

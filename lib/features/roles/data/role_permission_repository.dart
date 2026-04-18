@@ -10,11 +10,12 @@ class RolePermissionRepository {
 
   Future<List<RolePermissionResponse>> getPermissionsByRoleId(int roleId) async {
     try {
-      final response =
-          await _dio.get('${ApiConstants.rolePermissions}/role/$roleId');
-      return (response.data as List)
-          .map((e) => RolePermissionResponse.fromJson(e))
-          .toList();
+      final response = await _dio.get(
+        '${ApiConstants.rolePermissions}/role/$roleId',
+        queryParameters: {'page': 0, 'size': 1000},
+      );
+      final content = response.data['content'] as List;
+      return content.map((e) => RolePermissionResponse.fromJson(e)).toList();
     } on DioException catch (e) {
       throw DioClient.handleError(e);
     }

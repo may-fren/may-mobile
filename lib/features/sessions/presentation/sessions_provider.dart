@@ -4,10 +4,7 @@ import 'package:may_mobile/features/sessions/data/session_repository.dart';
 import 'package:may_mobile/features/sessions/domain/user_session.dart';
 
 final sessionRepositoryProvider = Provider<SessionRepository>((ref) {
-  return SessionRepository(
-    dio: ref.watch(dioProvider),
-    storage: ref.watch(secureStorageProvider),
-  );
+  return SessionRepository(dio: ref.watch(dioProvider));
 });
 
 final sessionsProvider =
