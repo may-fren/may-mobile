@@ -36,4 +36,10 @@ class PermissionKeys {
   static const String testCreate = 'TEST_CREATE';
   static const String testUpdate = 'TEST_UPDATE';
   static const String testDelete = 'TEST_DELETE';
+
+  // Service
+  static const String serviceRead = 'SERVICE_READ';
+  static const String serviceCreate = 'SERVICE_CREATE';
+  static const String serviceUpdate = 'SERVICE_UPDATE';
+  static const String serviceDelete = 'SERVICE_DELETE';
 }

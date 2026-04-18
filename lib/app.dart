@@ -11,6 +11,7 @@ import 'package:may_mobile/features/permissions/presentation/permissions_page.da
 import 'package:may_mobile/features/modules/presentation/modules_page.dart';
 import 'package:may_mobile/features/analyses/presentation/analyses_page.dart';
 import 'package:may_mobile/features/tests/presentation/tests_page.dart';
+import 'package:may_mobile/features/services/presentation/services_page.dart';
 import 'package:may_mobile/features/settings/presentation/settings_page.dart';
 import 'package:may_mobile/shared/widgets/app_drawer.dart';
 import 'package:may_mobile/shared/widgets/truck_background.dart';
@@ -47,6 +48,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/modules', builder: (_, __) => const ModulesPage()),
           GoRoute(path: '/analyses', builder: (_, __) => const AnalysesPage()),
           GoRoute(path: '/tests', builder: (_, __) => const TestsPage()),
+          GoRoute(path: '/services', builder: (_, __) => const ServicesPage()),
           GoRoute(path: '/settings', builder: (_, __) => const SettingsPage()),
         ],
       ),

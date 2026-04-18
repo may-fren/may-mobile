@@ -29,6 +29,7 @@ const _allMenuItems = [
   _MenuItem(path: '/modules', icon: Icons.widgets_outlined, label: 'Modüller', group: 'OPERASYON', requiredPermission: PermissionKeys.moduleRead),
   _MenuItem(path: '/analyses', icon: Icons.analytics_outlined, label: 'Analizler', group: 'OPERASYON', requiredPermission: PermissionKeys.analysisRead),
   _MenuItem(path: '/tests', icon: Icons.science_outlined, label: 'Testler', group: 'OPERASYON', requiredPermission: PermissionKeys.testRead),
+  _MenuItem(path: '/services', icon: Icons.build_outlined, label: 'Servisler', group: 'OPERASYON', requiredPermission: PermissionKeys.serviceRead),
   _MenuItem(path: '/settings', icon: Icons.settings_outlined, label: 'Ayarlar', group: 'GENEL'),
 ];
 
